@@ -111,7 +111,7 @@ function csvigo.load(...)
       -- return tidy table
       if mode == 'tidy' then
          vprint('returning tidy table')
-         return tidy
+         return tidy, i2key
       end
 
       -- query mode: build reverse index
