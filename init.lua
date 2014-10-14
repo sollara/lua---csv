@@ -1,5 +1,5 @@
 ----------------------------------------------------------------------
---
+-- Copyright (c) 2014 David Sollars
 -- Copyright (c) 2012 Roy Lowrance, Clement Farabet
 -- 
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -29,6 +29,8 @@
 --     June 24, 2012 - create a complete API to make queries - C. Farabet
 --     June 23, 2012 - made a pkg, and high-level functions - C. Farabet
 --     June 1, 2012  - csvigo.File class - R. Lowrance
+--     October 12, 2014 - csvigo.ordered_save added and csvigo.load
+--     was amended to return the i2key as a second option - D. Sollars
 ----------------------------------------------------------------------
 
 require 'torch'
@@ -324,4 +326,56 @@ function csvigo.save(...)
 
    -- done
    f:close()
+end
+   
+--An ordered save only applies to a tidy table as order is preseved
+--with raw data types
+function csvigo.ordered_save(...)
+   -- usage
+   local args, path, data, separator, verbose = dok.unpack(
+      {...},
+      'csvigo.ordered_save',
+      'save a csv file in the specified order:\n',
+      {arg='path',      type='string',  help='path to file', req=true},
+      {arg='data',      type='table',   help='table to save as a CSV file', req=true},
+      {arg='order',     type='table',   help='ordered table of headers', req=true},
+      {arg='separator', type='string',  help='separator (one character)', default=','},
+      {arg='verbose',   type='boolean', help='verbose load', default=true}
+   )
+
+   -- check path
+   path = path:gsub('^~',os.getenv('HOME'))
+
+   -- verbose print
+   local function vprint(...) if verbose then print('<csv>',...) end end
+
+   -- save CSV
+   vprint('writing to file: ' .. path)
+   local f = csvigo.File(path,'w',separator)
+
+   --map the current headers to the given order
+   local t_order = {}
+   for h in pairs(tidy) do
+      for i, n in ipairs(headers) do
+         if h == n then
+            table.insert(t_order, i)
+         end
+      end
+   end
+   --map data to raw
+   local raw = {}
+   table.insert(raw, order)
+   for i = 1, #data[order[1]] do
+      local t_row = {}
+      for loc, head in ipairs(order) do
+         t_row[loc] = data[head][i]
+      end
+      table.insert(raw, t_row)
+   end
+   --write data to file
+   f:write(order)
+   f:writeall(raw)
+   vprint('done writing')
+   --finish up
+   f.close()
 end

@@ -1,22 +1,21 @@
 # csvigo: a package to handle CSV files (read and write).
+This ia a clone of clementfarabet/lua---csv.  
 
 ## Install:
 
-First install Torch7 (www.torch.ch) then simply install this package
-using torch-rocks:
-
-```
-luarocks install csvigo
-```
+Install clementfarabet/lua--csv per the instructions, replace init.lua
+and README.md with those found here.
 
 ## Use:
 
-The library provides 2 high-level functions: csvigo.load and csvigo.save. To get help
+The library provides 3 high-level functions: csvigo.load, csvigo.save
+and csvigo.ordered_save. To get help
 on these functions, simply do:
 
 ```
 > help(csvigo.save)
 > help(csvigo.load)
+> help(csvigo.ordered_save)
 ```
 
 Loading a CSV file in 'query' mode gives you a convenient query function that
