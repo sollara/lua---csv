@@ -1,5 +1,8 @@
 # csvigo: a package to handle CSV files (read and write).
-This ia a clone of clementfarabet/lua---csv.  
+This ia a clone of clementfarabet/lua---csv.  It differs in that version
+adds a second return value for csvigo.load of the ordered csv file headers
+and adds a new function ordered_save, so that a csv file is saved 
+in a particular header order.
 
 ## Install:
 
